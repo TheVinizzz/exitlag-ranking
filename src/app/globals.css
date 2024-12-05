@@ -2,29 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .pixel-text {
+    font-family: 'VT323', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 1.2em;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@keyframes glow {
-  0%, 100% { filter: brightness(100%); }
-  50% { filter: brightness(120%); }
-}
-
-.top-3-glow {
-  animation: glow 2s ease-in-out infinite;
+.score-text {
+  font-size: 1.5em;
+  letter-spacing: 0.1em;
 }

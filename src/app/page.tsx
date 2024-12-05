@@ -1,8 +1,11 @@
 'use client';
 
 import { RankingTable } from "@/components/RankingTable";
-import Lottie from "lottie-react";
-import trophyAnimation from "@/animation/animation.json"; // Ajuste o caminho conforme necessário
+import dynamic from 'next/dynamic';
+import trophyAnimation from "@/animation/animation.json";
+
+// Carrega o Lottie apenas no lado do cliente
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 export default function Home() {
   return (
@@ -13,11 +16,13 @@ export default function Home() {
       <main className="max-w-7xl mx-auto relative">
         <h1 className="text-4xl font-bold text-center mb-8 pixel-text flex flex-row items-center justify-center gap-4">
           <div className="w-16 h-16">
-            <Lottie
-              animationData={trophyAnimation}
-              loop={true}
-              style={{ width: '100%', height: '100%' }}
-            />
+            {typeof window !== 'undefined' && (
+              <Lottie
+                animationData={trophyAnimation}
+                loop={true}
+                style={{ width: '100%', height: '100%' }}
+              />
+            )}
           </div>
           <span className="text-[#E84C5C] drop-shadow-[0_0_10px_rgba(232,76,92,0.5)] text-4xl">RANKING</span>
         </h1>

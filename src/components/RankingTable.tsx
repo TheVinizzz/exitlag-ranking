@@ -13,6 +13,7 @@ type Player = {
 export function RankingTable() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [prevPositions, setPrevPositions] = useState<{[key: number]: number}>({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Connect to your Socket.IO server
@@ -21,6 +22,7 @@ export function RankingTable() {
     // Listen for initial ranking and updates
     socket.on('ranking', (data: Player[]) => {
       setPlayers(data);
+      setIsLoading(false);
     });
 
     socket.on('rankingUpdate', (data: Player[]) => {
@@ -42,6 +44,17 @@ export function RankingTable() {
       socket.disconnect();
     };
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="bg-[#251F2A] rounded-2xl shadow-2xl p-6 border border-[#3A2D44] min-h-[400px] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#3A2D44] border-t-purple-500 rounded-full animate-spin" />
+          <p className="text-gray-400">Carregando ranking...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#251F2A] rounded-2xl shadow-2xl p-6 border border-[#3A2D44]">

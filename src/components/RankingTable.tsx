@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { motion } from 'framer-motion';
 import { CelebrationModal } from './CelebrationModal';
+import useSound from 'use-sound';
+import celebrationSound from './celebration.mp3';
 
 type Player = {
   id: number;
@@ -16,6 +18,23 @@ export function RankingTable() {
   const [prevPositions, setPrevPositions] = useState<{[key: number]: number}>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  
+  const [playCelebration] = useSound(celebrationSound, {
+    volume: 0.5,
+  });
+
+  // Add this useEffect to handle client-side mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleCelebrate = () => {
+    if (mounted) {
+      setIsCelebrating(true);
+      playCelebration();
+    }
+  };
 
   useEffect(() => {
     // Connect to your Socket.IO server
@@ -62,12 +81,12 @@ export function RankingTable() {
 
   return (
     <>
-    {firstPlacePlayer && (
-          <button
-            onClick={() => setIsCelebrating(true)}
-            className="absolute top-1 right-2 bg-[#E84C5C] pixel-text text-sm text-white px-4 py-3 rounded-sm hover:bg-[#ff718d] transition-colors shadow-[0_0_10px_rgba(232,76,92,0.2)] border border-[#ff718d]"
-          >
-            🎉 CELEBRAR
+      {mounted && firstPlacePlayer && (
+        <button
+          onClick={handleCelebrate}
+          className="absolute top-1 right-2 bg-[#E84C5C] pixel-text text-sm text-white px-4 py-3 rounded-sm hover:bg-[#ff718d] transition-colors shadow-[0_0_10px_rgba(232,76,92,0.2)] border border-[#ff718d]"
+        >
+          🎉 CELEBRAR
         </button>
       )}
       <div className="bg-[#251F2A] rounded-md shadow-[0_0_20px_rgba(232,76,92,0.1)] p-8 border-2 border-[#3A2D44] relative [image-rendering:pixelated]">
